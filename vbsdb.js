@@ -46,20 +46,22 @@ function insertRecord(data) {
 
 function selectRecords(query) {
     // queries db and assembles results into a js object, returns to api to be converted to json for transmission
-    console.log(query);
+    console.log('query: ' + JSON.stringify(query));
     const stmt = 'SELECT * FROM vbsurvey';
-    let results = { 'records': [] };
+    let result = { 'records': [] };
 
-    db.all(stmt, [], (err, rows) => {
-        if (err) {
-            throw err;
-        }
-        rows.forEach((row) => {
-            results.records.push(row);
+    return new Promise ((resolve, reject) => {
+        db.all(stmt, [], (err, rows) => {
+            if (err) {
+                reject(err);
+            }
+            rows.forEach((row) => {
+                result.records.push(row);
+            });
+            console.log('\nselect_result_within_db.all: ' + JSON.stringify(result));
+            resolve(result);
         });
-        console.log(results);
     });
-    return results;
 }
 
 function close() {
@@ -73,8 +75,8 @@ module.exports = {
     addRecord: function(data) {
         insertRecord(data);
     },
-    search(query) {
-        return selectRecords(query);
+    async search(query) {
+        return await selectRecords(query);
     },
     closeDB() {
         close();

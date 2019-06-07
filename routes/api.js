@@ -15,9 +15,9 @@ router.post('/', function(req, res, next) {
     });
 });
 router.get('/', async function(req, res) {
-    const testResult = [{'eMail': 'bob'}, {'eMail': 'clyde'}];
+    console.log('\n\nGET request initiated................\n');
     const result = await db.search(req.query);
-    console.log(result);
+    //console.log('post_get_result: ' + JSON.stringify(result));
     res.json(result);
 });
 module.exports = router;
