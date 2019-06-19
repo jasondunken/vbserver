@@ -46,19 +46,24 @@ function insertRecord(data) {
 
 function selectRecords(query) {
     // queries db and assembles results into a js object, returns to api to be converted to json for transmission
-    console.log('query: ' + JSON.stringify(query));
-    const stmt = 'SELECT * FROM vbsurvey';
-    let result = { 'records': [] };
-
+    let stmt = 'SELECT * FROM vbsurvey WHERE ' + query;
+    if (query === '') {
+        stmt = 'SELECT * FROM vbsurvey;';
+    }
+    // let stmt = 'SELECT * FROM vbsurvey;';
     return new Promise ((resolve, reject) => {
+        let result = { 'records': [] };
         db.all(stmt, [], (err, rows) => {
             if (err) {
                 reject(err);
             }
-            rows.forEach((row) => {
-                result.records.push(row);
-            });
-            console.log('\nselect_result_within_db.all: ' + JSON.stringify(result));
+            if (rows === undefined) {
+                console.log('No results returned!');
+            } else {
+                rows.forEach((row) => {
+                    result.records.push(row);
+                });
+            }
             resolve(result);
         });
     });
@@ -76,7 +81,14 @@ module.exports = {
         insertRecord(data);
     },
     async search(query) {
-        return await selectRecords(query);
+        let stmt = '';
+        for (let v in query) {
+            if (query[v] !== '') {
+                stmt += v + '=' + query[v] + ' AND ';
+            }
+        }
+        stmt = stmt.substring(0, stmt.length - 5);
+        return await selectRecords(stmt);
     },
     closeDB() {
         close();
