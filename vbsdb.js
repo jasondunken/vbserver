@@ -50,7 +50,6 @@ function selectRecords(query) {
     if (query === '') {
         stmt = 'SELECT * FROM vbsurvey;';
     }
-    // let stmt = 'SELECT * FROM vbsurvey;';
     return new Promise ((resolve, reject) => {
         let result = { 'records': [] };
         db.all(stmt, [], (err, rows) => {
