@@ -69,6 +69,7 @@ const record = {
     mpPredSpecificity: 0,
     mpPredAccurac: 0,
     mpPredPredictions: 0,
+    comments: ''
 };
 
 module.exports = record;
