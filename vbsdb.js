@@ -24,8 +24,8 @@ function setupDB() {
             if (propType === 'boolean') { stmt += property + ' INT,'; }
         }
     }
-    stmt = stmt.substring(0, stmt.length - 1); // remove the last comma before closing the statement
-    stmt += ');';
+    
+    stmt += 'dateEntered TEXT, timestamp TEXT);'
     db.run(stmt);
 }
 
@@ -38,8 +38,11 @@ function insertRecord(data) {
             if (propType === 'boolean') { stmt += (data[d] === true ? 1 : 0) + ',' }
         }
     }
-    stmt = stmt.substring(0, stmt.length - 1);
-    stmt += ');';
+    const time = new Date();
+    const dateEntered = time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + time.getDate();
+    const timestamp = time.toISOString();
+    stmt += '"' + dateEntered + '",';
+    stmt += '"' + timestamp + '");';
     console.log(stmt);
     db.run(stmt);
 }
