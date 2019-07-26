@@ -14,10 +14,10 @@ router.post('/', function(req, res, next) {
     eMail: req.body.eMail,
     });
 });
+
 router.get('/', async function(req, res) {
     console.log('\n\nGET request initiated................\n');
     const result = await db.search(req.query);
-    //console.log('post_get_result: ' + JSON.stringify(result));
     res.json(result);
 });
 module.exports = router;
