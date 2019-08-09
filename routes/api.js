@@ -9,7 +9,6 @@ router.use(cors());
 
 router.post('/', [], function (req, res) {
     console.log('\n\nPOST request initiated................\n');
-    //const result = db.addRecords(req.body);
     if (db.addRecords(req.body)) {
         res.status(200).json({
             vbserver: 'record added',
