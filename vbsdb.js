@@ -5,11 +5,13 @@ const { check, validationResult } = require('express-validator');
 const record = require('./record.js');
 
 const dbPath = 'vbsurvey.db';
+const inMemoryDB = ':memory:';
 
 let db;
 
 function setupDB() {
-    db = new sqlite3.Database(dbPath, (err) => {
+    const path = process.env.NODE_ENV === 'dev'? dbPath : inMemoryDB;
+    db = new sqlite3.Database(path, (err) => {
         if (err) {
             console.error(err.message);
         } else {

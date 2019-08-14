@@ -4,8 +4,11 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
+const dotenv = require('dotenv').config();
+
 const indexRouter = require('./routes/index');
 const apiRouter = require('./routes/api');
+const healthcheckRouter = require('./routes/healthcheck');
 
 const cors = require('cors');
 
@@ -25,6 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/api', apiRouter);
+app.use('/healthcheck', healthcheckRouter);
 
 app.use(cors());
 
