@@ -4,7 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 
-const dotenv = require('dotenv').config();
+const dotenv = require('dotenv')
 
 const indexRouter = require('./routes/index');
 const apiRouter = require('./routes/api');
@@ -14,6 +14,7 @@ const cors = require('cors');
 
 const db = require('./vbsdb.js');
 
+dotenv.config();
 app = express();
 
 // view engine setup
