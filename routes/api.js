@@ -9,8 +9,9 @@ router.use(cors());
 
 router.post('/', [], function (req, res, next) {
     console.log('\n\nPOST request initiated from  ' + req.ip + '\n');
+    console.log('POST: ' + objValues2Array(req.body));
     let result;
-    result = insertRecord(req.body);
+    result = insertRecord(objValues2Array(req.body));
     result.then(success => {
         res.status(200).json({
             vbserver: 'record added',
@@ -25,11 +26,10 @@ router.post('/', [], function (req, res, next) {
 
 router.post('/batch', [], function (req, res, next) {
     console.log('\n\nPOST request initiated from  ' + req.ip + '\n');
-    console.log('request: api/batch?' + JSON.stringify(req.body));
     const records = req.body;
     const fails = [];
     for (const i in records) {
-        let result = insertRecord(obj2SQL(records[i]));
+        let result = insertRecord(objValues2Array(records[i]));
         result.then(success => {
             console.log('/batch record added');
         }).catch(err => {
@@ -53,14 +53,24 @@ router.get('/', async function (req, res) {
     res.json(result);
 });
 
-function insertRecord(record) {
-    return db.addRecords(record)
+function insertRecord(values) {
+    return db.addRecord(values)
 }
 
-function obj2SQL(record) {
+function objValues2Array(record) {
+    const values = [];
     for (const i in record) {
-
+        if (typeof record[i] === 'string') {
+            values.push('"' + record[i] + '"');
+        }
+        if (typeof record[i] === 'boolean') {
+            values.push(record[i] === true ? 1 : 0);
+        }
+        if (typeof record[i] === 'number') {
+            values.push(record[i]);
+        }
     }
+    return values;
 }
 
 module.exports = router;

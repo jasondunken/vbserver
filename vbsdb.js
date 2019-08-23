@@ -29,26 +29,26 @@ function setupDB() {
     db.run(stmt);
 }
 
-function insertRecord(data) {
-    // TODO: need to sanitize input before using and verify it's a Record
-    let stmt = 'INSERT INTO vbsurvey VALUES (';
-    for (let d in data) {
-        if (data.hasOwnProperty(d)) {
-            const propType = typeof data[d];
-            if (propType === 'string' || propType === 'number') { stmt += data[d] + ','; }
-            if (propType === 'boolean') { stmt += (data[d] === true ? 1 : 0) + ',' }
-        }
-    }
+function insertRecord(values) {
+    // this method expects an array of values to bind to the SQL query, not an object
 
-    // add a time stamp to the record
+    // add a time stamp to the array of values
     const time = new Date();
     const dateEntered = time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + time.getDate();
     const timestamp = time.toISOString();
-    stmt += '"' + dateEntered + '",';
-    stmt += '"' + timestamp + '");';
-    console.log(stmt);
+
+    values.push(dateEntered);
+    values.push(timestamp);
+
+    let stmt = 'INSERT INTO vbsurvey VALUES (';
+    for (let i = 0; i < values.length; i++) {
+        stmt += '?,';
+    }
+    stmt = stmt.substring(0, stmt.length - 1); // removes the trailing ,
+    stmt += ');';
+
     return new Promise((resolve, reject) => {
-        db.run(stmt, [], function (err, res) {
+        db.run(stmt, values, function (err, res) {
             if (err) {
                 console.log('insertRecord() error! ' + err.message);
                 reject(err);
@@ -92,8 +92,8 @@ module.exports = {
     initDB() {
         setupDB();
     },
-    async addRecords(data) {
-        return await insertRecord(data);
+    async addRecord(values) {
+        return await insertRecord(values);
     },
     async search(query) {
         let stmt = '';
