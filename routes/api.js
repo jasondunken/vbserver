@@ -9,7 +9,6 @@ router.use(cors());
 
 router.post('/', [], function (req, res, next) {
     console.log('\n\nPOST request initiated from  ' + req.ip + '\n');
-    console.log('POST: ' + objValues2Array(req.body));
     let result;
     result = insertRecord(objValues2Array(req.body));
     result.then(success => {
@@ -25,20 +24,21 @@ router.post('/', [], function (req, res, next) {
 });
 
 router.post('/batch', [], function (req, res, next) {
-    console.log('\n\nPOST request initiated from  ' + req.ip + '\n');
+    console.log('\n\nPOST/batch request initiated from  ' + req.ip + '\n');
     const records = req.body;
     const fails = [];
     for (const i in records) {
         let result = insertRecord(objValues2Array(records[i]));
         result.then(success => {
-            console.log('/batch record added');
+            console.log('/batch added record: ' + record[i]);
         }).catch(err => {
+            console.log('/batch add record failed: ' + record[i]);
             fails.push(err);
         });
     }
     if (fails.length > 0) {
         res.status(400).json({
-            vbserver: 'add record failed ' + JSON.stringify(fails)
+            vbserver: 'add record failed ' + fails
         });
     } else {
         res.status(200).json({

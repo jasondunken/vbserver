@@ -42,9 +42,11 @@ function insertRecord(values) {
 
     let stmt = 'INSERT INTO vbsurvey VALUES (';
     for (let i = 0; i < values.length; i++) {
-        stmt += '?,';
+        stmt += '?';
+        if (i < values.length - 1) {
+            stmt += ',';
+        }
     }
-    stmt = stmt.substring(0, stmt.length - 1); // removes the trailing ,
     stmt += ');';
 
     return new Promise((resolve, reject) => {
