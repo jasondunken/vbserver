@@ -30,9 +30,9 @@ router.post('/batch', [], function (req, res, next) {
     for (const i in records) {
         let result = insertRecord(objValues2Array(records[i]));
         result.then(success => {
-            console.log('/batch added record: ' + record[i]);
+            console.log('/batch added record: ' + records[i]);
         }).catch(err => {
-            console.log('/batch add record failed: ' + record[i]);
+            console.log('/batch add record failed: ' + records[i]);
             fails.push(err);
         });
     }
