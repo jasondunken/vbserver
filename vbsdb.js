@@ -1,7 +1,5 @@
 const sqlite3 = require('sqlite3').verbose();
 
-const { check, validationResult } = require('express-validator');
-
 const record = require('./record.js');
 
 const dbPath = 'vbsurvey.db';
@@ -10,7 +8,7 @@ const inMemoryDB = ':memory:';
 let db;
 
 function setupDB() {
-    const path = process.env.NODE_ENV === 'dev'? dbPath : inMemoryDB;
+    const path = process.env.NODE_ENV === 'dev' ? dbPath : inMemoryDB;
     db = new sqlite3.Database(path, (err) => {
         if (err) {
             console.error(err.message);
@@ -18,7 +16,6 @@ function setupDB() {
             console.log("Connected to " + dbPath);
         }
     });
-
     let stmt = 'CREATE TABLE IF NOT EXISTS vbsurvey(';
     for (let property in record) {
         if (record.hasOwnProperty(property)) {
@@ -28,7 +25,6 @@ function setupDB() {
             if (propType === 'boolean') { stmt += property + ' INT,'; }
         }
     }
-
     stmt += 'dateEntered TEXT, timestamp TEXT);'
     db.run(stmt);
 }
@@ -51,14 +47,16 @@ function insertRecord(data) {
     stmt += '"' + dateEntered + '",';
     stmt += '"' + timestamp + '");';
     console.log(stmt);
-    db.run(stmt, [], (err, res) => {
-        if (err) {
-            console.log('insertRecord() error! ' + err.message);
-            return false;
-        }
-        if (res) {
-            return true;
-        }
+    return new Promise((resolve, reject) => {
+        db.run(stmt, [], function (err, res) {
+            if (err) {
+                console.log('insertRecord() error! ' + err.message);
+                reject(err);
+            } else {
+                console.log('insertRecord() res ' + res);
+                resolve(res);
+            }
+        });
     });
 }
 
@@ -91,11 +89,11 @@ function close() {
 }
 
 module.exports = {
-    initDB: function () {
+    initDB() {
         setupDB();
     },
-    addRecords: function (data) {
-        return insertRecord(data);
+    async addRecords(data) {
+        return await insertRecord(data);
     },
     async search(query) {
         let stmt = '';

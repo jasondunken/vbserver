@@ -7,4 +7,5 @@ applications:
   instances: 1
   health-check-type: http
   health-check-endpoint: /healthcheck
-  health-check-timeout: 180
+  health-check-timeout: 60
+  

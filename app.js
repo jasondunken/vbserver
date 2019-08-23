@@ -14,8 +14,14 @@ const cors = require('cors');
 
 const db = require('./vbsdb.js');
 
-dotenv.config();
+if (!process.env.PRODUCTION) {
+    dotenv.config();
+}
+// if you don't set the desired port before instantiating the app express defaults to listening on port 3000
 app = express();
+console.log('Server is listening at PORT', process.env.PORT);
+
+app.use(cors());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -30,8 +36,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/api', apiRouter);
 app.use('/healthcheck', healthcheckRouter);
-
-app.use(cors());
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
