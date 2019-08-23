@@ -31,8 +31,6 @@ function setupDB() {
 
 function insertRecord(values) {
     // this method expects an array of values to bind to the SQL query, not an object
-
-    // add a time stamp to the array of values
     const time = new Date();
     const dateEntered = time.getFullYear() + "-" + (time.getMonth() + 1) + "-" + time.getDate();
     const timestamp = time.toISOString();
@@ -64,6 +62,8 @@ function insertRecord(values) {
 
 function selectRecords(query) {
     // queries db and assembles results into a js object, returns to api to be converted to json for transmission
+
+    // TODO: figure out how to bind the qurey to the query string
     let stmt = 'SELECT * FROM vbsurvey WHERE ' + query;
     if (query === '') {
         stmt = 'SELECT * FROM vbsurvey;';
