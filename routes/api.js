@@ -36,6 +36,7 @@ router.post('/batch', [], function (req, res, next) {
             fails.push(err);
         });
     }
+    // going to have a async issue here. need to use a Promise.all callback here
     if (fails.length > 0) {
         res.status(400).json({
             vbserver: 'add record failed ' + fails
@@ -61,7 +62,7 @@ function objValues2Array(record) {
     const values = [];
     for (const i in record) {
         if (typeof record[i] === 'string') {
-            values.push('"' + record[i] + '"');
+            values.push(record[i]);
         }
         if (typeof record[i] === 'boolean') {
             values.push(record[i] === true ? 1 : 0);

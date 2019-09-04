@@ -70,7 +70,7 @@ const record = {
     mpFitSetSize: 0,
     mpPredSensitivity: 0,
     mpPredSpecificity: 0,
-    mpPredAccurac: 0,
+    mpPredAccuracy: 0,
     mpPredPredictions: 0,
     comments: ''
 };
