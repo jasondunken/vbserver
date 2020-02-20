@@ -1,11 +1,7 @@
 ---
 applications:
-- name: VBServer
-  command: node app.js
-  memory: 512M
-  disk_quota: 256M
-  instances: 1
-  health-check-type: http
-  health-check-endpoint: /healthcheck
-  health-check-timeout: 60
-  
+  - name: VBServer
+    command: node app.js
+    memory: 512M
+    disk_quota: 256M
+    instances: 1
